@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-dimension = '3d'    # 2d/3d
+dimension = '2d'    # 2d/3d
 n = 40             # number of agents
 dt = 0.1
 r_r = 1
@@ -32,10 +32,10 @@ class Agent:
         self.pos[1] = np.random.uniform(0, field.height)
         self.pos[2] = np.random.uniform(0, field.depth)
         self.vel = np.random.uniform(-1, 1, 3)
-        self.vel = self.vel / norm(self.vel) * speed
         if dimension == '2d':
             self.pos[2] = 0
             self.vel[2] = 0
+        self.vel = self.vel / norm(self.vel) * speed
 
     def update_position(self, delta_t):
         self.pos = self.pos + self.vel * delta_t

@@ -109,8 +109,6 @@ if __name__ == '__main__':
         d_thr = np.array([0, 0, 0])
         d_res = np.array([0, 0, 0])
         t = 0
-        spacing = []  ### store the average average spacing
-        disorder = []  ### store the average average difference in headings
 
         # create 'swarm' and 'shark' and 'food' instances based on the Agent class
         [swarm.append(Agent(i, constant_speed)) for i in range(n)]
@@ -127,13 +125,9 @@ if __name__ == '__main__':
 
         # begin the simulation loop
         number_of_alives = n
-        total_spacing = 0
-        total_disorder = 0
+
         while t < max_steps:
-            sspacing = []
-            sdisorder = []
-            D = []
-            S = []
+
             for i in range(len(swarm)):
                 swarm_pos[i, :] = swarm[i].pos
                 swarm_vel[i, :] = swarm[i].vel
@@ -187,9 +181,6 @@ if __name__ == '__main__':
                 d_thr = [0, 0, 0]
                 d_res = [0, 0, 0]
 
-                nspacing = []  ###added this to hold the distance to each neighbor, to be averaged for eahc member of the swarm
-                ndisorder = []  ####add this to hold the difference between headings
-
                 if agent.is_alive:
                     for neighbor in swarm:
                         if agent.id != neighbor.id and neighbor.is_alive and norm(neighbor.pos - agent.pos) < r_a:
@@ -200,8 +191,6 @@ if __name__ == '__main__':
                             agent_vel_normalized = agent.vel/norm(agent.vel)
                             neighbor_vel_normalized = neighbor.vel / norm(neighbor.vel)
 
-                            S.append(norm_r)  ### append the distance to each neighbor to a list
-                            D.append(norm(agent_vel_normalized - neighbor_vel_normalized))  ### append disorder
                             if acos(np.dot(r_normalized, agent_vel_normalized)) < field_of_view / 2:
                                 if norm_r < r_r:
                                     d_r = d_r - r_normalized
@@ -251,8 +240,6 @@ if __name__ == '__main__':
                         elif abs(angle_between)-pi > 0:
                             agent.vel = d/norm(d) * constant_speed
 
-            # spacing.append(np.mean(sspacing))  ### ADDED THIS
-            # disorder.append(np.mean(sdisorder))  ### ADDED THIS
 
             for each_shark in sharks:
                 d = [0, 0, 0]
@@ -279,10 +266,7 @@ if __name__ == '__main__':
             [agent.update_position(dt) for agent in sharks]
 
 
-            S_avg_step = sum(S) / (number_of_alives ** 2 - 1)
-            D_avg_step = sum(D) / (number_of_alives ** 2 - 1)
-            total_spacing = S_avg_step + total_spacing
-            total_disorder = S_avg_step + total_disorder
+
         number_of_alives_list.append(number_of_alives)
 
 
@@ -292,7 +276,7 @@ if __name__ == '__main__':
     fig1 = plt.figure()
     ax1 = fig1.gca()
     ax1.plot(alpha_list, number_of_alives_list)
-    plt.pause(50)
+    plt.pause(0.0001)
 
 
 
